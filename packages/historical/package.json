@@ -1,0 +1,27 @@
+{
+  "name": "js-historical",
+  "version": "0.0.1",
+  "description": "API for interacting with react-router-dom history",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://jsmith@bitbucket.indot.org/scm/util/js-historical.git"
+  },
+  "keywords": [
+    "react",
+    "react-router",
+    "history"
+  ],
+  "author": "jarsmith@indot.in.gov",
+  "license": "MIT",
+  "devDependencies": {
+    "react": "^16.9.0",
+    "react-router": "^5.0.1",
+    "tslint": "^5.18.0",
+    "typedoc": "^0.15.0",
+    "typescript": "^3.5.3"
+  }
+}
