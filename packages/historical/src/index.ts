@@ -7,6 +7,16 @@
  * @license MIT
  */
 
+// Plain Old Javascript Object
+interface IPojo {
+  [key: string]: any,
+};
+
+// Object that only contains valid JSON values.
+interface IJsonObject {
+  [key: string]: boolean | string | number | null | Array<IJsonObject> | IJsonObject,
+}
+
 interface ILocation {
   pathname: string,
   search: string,
@@ -17,13 +27,12 @@ interface IHistory {
 };
 
 /**
- * @description Attempts to parse the argument as JSON. On failure returns the original
- * value.
+ * @description Attempts to parse the argument as JSON. On failure returns an empty object.
  *
  * @param {string} json The thing to attempt parsing.
- * @returns {Any} The result.
+ * @returns {Object} The result.
  */
-const tryParse = (json: string): any => {
+const tryParse = (json: string): IJsonObject => {
   let result = json;
   try {
     result = JSON.parse(json);
@@ -31,7 +40,7 @@ const tryParse = (json: string): any => {
     // no-op
   }
 
-  return result;
+  return {};
 };
 
 /**
@@ -43,7 +52,7 @@ const tryParse = (json: string): any => {
  * @param {Array} [arr] The destructured key/value sub-array.
  * @returns {Object} The updated parameter object.
  */
-const reducer = (params: any, [key, value]: string[]) => {
+const reducer = (params: IPojo, [key, value]: string[]): IPojo => {
   const val = Array.isArray(value)
     ? value.map(tryParse)
     : tryParse(value);
@@ -70,7 +79,7 @@ const reducer = (params: any, [key, value]: string[]) => {
  * @param {string} qs The query string to parse.
  * @returns {Object} The paramter object.
  */
-export const fallback = (qs: string) => {
+export const fallback = (qs: string): IPojo => {
   if (!qs) return {};
   const q = qs.indexOf('?') === 0
     ? qs.slice(1)
@@ -94,7 +103,7 @@ export const fallback = (qs: string) => {
  * @param {string} qs The query string to parse.
  * @returns {Object} The parameter object.
  */
-export const parseQs = (qs: string) => {
+export const parseQs = (qs: string): IPojo => {
   if (!qs) return {};
   if (typeof URLSearchParams !== 'undefined') {
     return [...new URLSearchParams(qs)]
@@ -111,7 +120,7 @@ export const parseQs = (qs: string) => {
  * @param {Object} params The parameters object.
  * @returns {string} The HTTP query string.
  */
-export const constructQs = (params: any) => {
+export const constructQs = (params: IPojo): string => {
   if (!params) return '';
   return Object.entries(params)
     .filter(([key, value]) => {
