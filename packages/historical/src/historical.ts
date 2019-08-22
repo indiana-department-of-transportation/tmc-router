@@ -32,7 +32,7 @@ interface IHistory {
  * @param {string} json The thing to attempt parsing.
  * @returns {Object} The result.
  */
-const tryParse = (json: string): IJsonObject => {
+const tryParse = (json: string): string | IJsonObject => {
   let result = json;
   try {
     result = JSON.parse(json);
@@ -40,7 +40,7 @@ const tryParse = (json: string): IJsonObject => {
     // no-op
   }
 
-  return {};
+  return result;
 };
 
 /**
