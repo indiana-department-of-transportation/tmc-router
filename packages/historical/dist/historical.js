@@ -20,7 +20,7 @@ const tryParse = (json) => {
     catch (_e) {
         // no-op
     }
-    return {};
+    return result;
 };
 /**
  * @description reduces an array of arrays in [[key, value]] format into an object.
