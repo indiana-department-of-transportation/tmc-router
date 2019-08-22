@@ -21,6 +21,7 @@
     "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
     "@babel/preset-typescript": "^7.3.3",
+    "babel-plugin-transform-es2015-modules-umd": "^6.24.1",
     "react": "^16.9.0",
     "react-router": "^5.0.1",
     "tslint": "^5.18.0",
