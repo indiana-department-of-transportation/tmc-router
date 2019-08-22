@@ -10,9 +10,9 @@
 // Plain Old Javascript Object
 interface IPojo {
   [key: string]: any,
-};
+}
 
-// Object that only contains valid JSON values.
+// Object that only contains valid JSON values, e.g. the result of a JSON.parse.
 interface IJsonObject {
   [key: string]: boolean | string | number | null | Array<IJsonObject> | IJsonObject,
 }
@@ -20,11 +20,11 @@ interface IJsonObject {
 interface ILocation {
   pathname: string,
   search: string,
-};
+}
 
 interface IHistory {
   push: (arg: string) => any,
-};
+}
 
 /**
  * @description Attempts to parse the argument as JSON. On failure returns an empty object.
