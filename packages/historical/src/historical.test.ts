@@ -8,7 +8,7 @@
  * @copyright INDOT, 2019
  */
 
-import { historical, parseQs, constructQs } from '../dist/historical';
+import { historical, parseQs, constructQs } from './historical';
 
 describe('constructQs', () => {
   it('should return an empty string when fed an empty object.', () => {
@@ -137,13 +137,13 @@ describe('historical', () => {
 
     it('should have an updateURL method', () => {
       expect(typeof hs.updateURL).toBe('function');
-      const foo = {};
+      const foo = 'bargahfarga';
       hs.updateURL(foo);
       expect(fakeHistory.push).toHaveBeenCalledWith(foo);
     });
 
     it('should throw when trying to updateURL if history not provided.', () => {
-      expect(() => historical(fakeLocation).updateURL()).toThrow();
+      expect(() => historical(fakeLocation).updateURL('foobar')).toThrow();
     });
   });
 });

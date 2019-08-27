@@ -159,7 +159,7 @@ const errFn = (): undefined => {
  * @param {Any} history The history API object.
  * @returns {Object} The API object.
  */
-export const historical = (location: ILocation, history: IHistory) => ({
+export const historical = (location: ILocation, history?: IHistory) => ({
   currentPath: location.pathname,
   searchParams: parseQs(location.search),
   currentRoute: location.pathname + location.search,
