@@ -51,7 +51,7 @@ export declare const constructQs: (params: IPojo) => string;
  * @param {Any} history The history API object.
  * @returns {Object} The API object.
  */
-export declare const historical: (location: ILocation, history: IHistory) => {
+export declare const historical: (location: ILocation, history?: IHistory | undefined) => {
     currentPath: string;
     searchParams: IPojo;
     currentRoute: string;
