@@ -45,7 +45,7 @@
     "build": "npm run build:ts && npm run build:js",
     "build:types": "tsc --emitDeclarationOnly",
     "build:js": "babel dist/historical.js -o dist/historical.umd.js  --source-maps inline",
-    "build:ts": "tsc -p ./src --outDir ./dist",
+    "build:ts": "tsc --outDir ./dist",
     "gen-docs": "typedoc --readme README.md --excludeNotExported --ignoreCompilerErrors --exclude '{**/*spec*,**/node_modules/**,**/spec/**}' --out doc ./src"
   }
 }
