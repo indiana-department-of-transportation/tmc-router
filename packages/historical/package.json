@@ -1,5 +1,5 @@
 {
-  "name": "js-historical",
+  "name": "@indot/historical",
   "version": "0.0.2",
   "description": "API for interacting with react-router-dom history",
   "main": "dist/historical.js",
