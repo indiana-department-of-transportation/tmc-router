@@ -17,7 +17,7 @@ import {
 } from 'react-router-dom';
 
 export interface AuthOnlyProps {
-  render: (props: any) => ReactNode,
+  render: (props: RouteComponentProps<any>) => ReactNode | undefined,
   roles: string[],
   path: string,
   exact: boolean,
@@ -39,11 +39,10 @@ const NotAuthorized = ({
   loggedIn,
   authorized
 }: {
-    location: any,
-    loggedIn: boolean,
-    authorized: boolean,
+  location: any,
+  loggedIn: boolean,
+  authorized: boolean,
 }) => {
-  console.log('EUREKA!!!!!!!!!!!!!!!!!!!!!!');
   if (!loggedIn) {
     console.log('returning login redirect');
     return <Redirect to={{ pathname: '/login', state: { from: location } }} />;
@@ -78,42 +77,19 @@ export const AuthOnlyRoute: SFC<AuthOnlyProps> = ({
   const loggedIn = Boolean(user && user.token);
   const authorized = Boolean(loggedIn && roles.some((role: string) => user.roles.includes(role)));
 
-  
-
-  console.log(`logged in: ${loggedIn}`);
-  console.log(`authed: ${authorized}`);
-  const renderFn = (loggedIn && authorized)
-    ? render
-    : NotAuthorized;
-
-  console.log(`renderFn name: ${renderFn.name}`);
-
-  // return (
-  //   <Route
-  //     {...rest}
-  //     user={user}
-  //     render={renderFn}
-  //   />
-  // );
-  // return (loggedIn && authorized)
-  //   ? (
-  //     <Route
-  //       {...rest}
-  //       render={renderFn}
-  //     />
-  //   )
-  //   : (
-  //     <Route
-  //       {...rest}
-  //       render={({ location }) => <NotAuthorized location={location} loggedIn={loggedIn} authorized={authorized} />}
-  //     />
-  //   );
-  return (
-    <Route
-      {...rest}
-      render={({ location }) => <NotAuthorized location={location} loggedIn={loggedIn} authorized={authorized} />}
-    />
-  );
+  return (loggedIn && authorized)
+    ? (
+      <Route
+        {...rest}
+        render={render}
+      />
+    )
+    : (
+      <Route
+        {...rest}
+        render={({ location }) => <NotAuthorized location={location} loggedIn={loggedIn} authorized={authorized} />}
+      />
+    );
 };
 
 AuthOnlyRoute.propTypes = {

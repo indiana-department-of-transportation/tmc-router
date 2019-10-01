@@ -11,7 +11,7 @@ import React from 'react';
 
 import Adapter from 'enzyme-adapter-react-16';
 import Enzyme, { shallow, mount } from 'enzyme';
-import { Route, BrowserRouter as Router } from 'react-router-dom';
+import { Route, MemoryRouter as Router } from 'react-router-dom';
 
 import AuthOnlyRoute from './authonly';
 
@@ -26,7 +26,7 @@ const defaultUser = {
 };
 
 describe('AuthOnlyRoute', () => {
-  xit('should render without crashing', () => {
+  it('should render without crashing', () => {
     shallow(
       <Router>
         <AuthOnlyRoute
@@ -40,7 +40,7 @@ describe('AuthOnlyRoute', () => {
     );
   });
 
-  it('should return a redirect if there is no user token', (done) => {
+  it('should return a redirect if there is no user token', () => {
     const wrapper = mount(
       <Router>
         <AuthOnlyRoute
@@ -48,18 +48,12 @@ describe('AuthOnlyRoute', () => {
           path="/"
           user={defaultUser}
           roles={['a']}
-          render={() => {
-            console.log("ARRRRRIBA!");
-            return <div id="goodbye">Adios</div>;
-          }}
+          render={() => <div id="goodbye">Adios</div>}
         />
         <Route exact path="/login"><div id="hello">Hola</div></Route>
       </Router>
     );
 
-    // wrapper.update();
-    console.log('HTML:');
-    console.log(wrapper.html());
     expect(wrapper.find('div').length).toBe(1);
     const hello = wrapper.find('#hello');
     const goodbye = wrapper.find('#goodbye');
@@ -67,7 +61,7 @@ describe('AuthOnlyRoute', () => {
     expect(goodbye.length).toBe(0);
   });
 
-  xit('should render the route if there is a user token', () => {
+  it('should render the route if there is a user token', () => {
     const validUser = {
       user_name: 'foobar',
       user_id: 12,
@@ -89,7 +83,6 @@ describe('AuthOnlyRoute', () => {
       </Router>
     );
 
-    wrapper.update();
     const hello = wrapper.find('#hello');
     const goodbye = wrapper.find('#goodbye');
     expect(goodbye.length).toBe(1);
