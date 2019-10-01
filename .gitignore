@@ -59,3 +59,10 @@ typings/
 
 # next.js build output
 .next
+
+# compiled test files
+packages/*/dist/*.test.js
+
+# INDOT specific stuff
+commit-msg.txt
+diff.txt
