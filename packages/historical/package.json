@@ -1,6 +1,6 @@
 {
   "name": "@indot/historical",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "API for interacting with react-router-dom history",
   "main": "dist/historical.js",
   "repository": {
@@ -15,7 +15,7 @@
   "author": "jarsmith@indot.in.gov",
   "license": "MIT",
   "dependencies": {
-    "@indot/qs": "^1.0.0"
+    "@indot/qs": "^1.0.1"
   },
   "peerDependencies": {
     "prop-types": "^15.7.2",
