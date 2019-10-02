@@ -44,5 +44,9 @@
     "build:ts": "tsc",
     "gen-docs": "typedoc --readme README.md --excludeNotExported --ignoreCompilerErrors --exclude '{**/*spec*,**/node_modules/**,**/spec/**}' --out docs ./src",
     "no-jekyll": "touch docs/.nojekyll"
-  }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "0cf3761957442ef3c75eacb401c434f7bb340d58"
 }

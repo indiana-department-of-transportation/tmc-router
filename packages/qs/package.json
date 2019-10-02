@@ -26,5 +26,9 @@
     "tslint": "^5.20.0",
     "typedoc": "^0.15.0",
     "typescript": "^3.6.3"
-  }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "gitHead": "0cf3761957442ef3c75eacb401c434f7bb340d58"
 }
