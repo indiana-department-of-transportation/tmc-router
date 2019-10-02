@@ -1,6 +1,6 @@
 {
   "name": "@indot/qs",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "Query string manipulations",
   "main": "dist/qs.js",
   "scripts": {
