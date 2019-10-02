@@ -3,5 +3,12 @@
   "private": true,
   "devDependencies": {
     "lerna": "^3.16.4"
+  },
+  "scripts": {
+    "bootstrap": "lerna bootstrap --hoist --strict",
+    "publish-major": "lerna publish major",
+    "publish-minor": "lerna publish minor",
+    "publish-patch": "lerna publish patch",
+    "link": "lerna link"
   }
 }
