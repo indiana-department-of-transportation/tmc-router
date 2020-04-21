@@ -38,6 +38,18 @@ describe('constructQs', () => {
     const result = constructQs(params);
     expect(result).toBe('foo=3&foo=true&bar=baz');
   });
+
+  it('should automatically convert any Date instances to ISO 8601 strings', () => {
+    const now = new Date();
+    const old = new Date(2012, 1, 5);
+    const params = {
+      foo: [3, now],
+      bar: old,
+    };
+
+    const result = constructQs(params);
+    expect(result).toBe(`foo=3&foo=${encodeURIComponent(now.toISOString())}&bar=${encodeURIComponent(old.toISOString())}`);
+  });
 });
 
 describe('parseQs', () => {

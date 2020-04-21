@@ -30,5 +30,8 @@
   "publishConfig": {
     "access": "public"
   },
-  "gitHead": "0cf3761957442ef3c75eacb401c434f7bb340d58"
+  "gitHead": "0cf3761957442ef3c75eacb401c434f7bb340d58",
+  "dependencies": {
+    "@jasmith79/ts-utils": "^0.7.1"
+  }
 }

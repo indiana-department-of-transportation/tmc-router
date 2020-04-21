@@ -6,16 +6,10 @@
  * @author Jared Smith
  * @license MIT
  */
-
-// Plain Old Javascript Object
-interface IPojo {
-  [key: string]: any,
-}
-
-// Object that only contains valid JSON values, e.g. the result of a JSON.parse.
-interface IJsonObject {
-  [key: string]: boolean | string | number | null | Array<IJsonObject> | IJsonObject,
-}
+import {
+  IPojo,
+  IJSONObject,
+} from '@jasmith79/ts-utils';
 
 /**
  * @description Attempts to parse the argument as JSON. On failure returns an empty object.
@@ -23,7 +17,7 @@ interface IJsonObject {
  * @param {string} json The thing to attempt parsing.
  * @returns {Object} The result.
  */
-const tryParse = (json: string): string | IJsonObject => {
+const tryParse = (json: string): string | IJSONObject => {
   let result = json;
   try {
     result = JSON.parse(json);
@@ -105,6 +99,14 @@ export const parseQs = (qs: string): IPojo => {
   return fallback(qs);
 };
 
+const convertIfDate = (x: any): string => {
+  if (x instanceof Date) {
+    return x.toISOString();
+  } else {
+    return '' + x;
+  }
+};
+
 /**
  * @description Converts an object into a query string.
  *
@@ -124,11 +126,11 @@ export const constructQs = (params: IPojo): string => {
       if (Array.isArray(value)) {
         return value
           .filter(v2 => v2 !== '' && v2 !== undefined)
-          .map(v2 => `${k}=${encodeURIComponent(v2)}`)
+          .map(v2 => `${k}=${encodeURIComponent(convertIfDate(v2))}`)
           .join('&');
       }
 
-      return `${k}=${encodeURIComponent(`${value}`)}`;
+      return `${k}=${encodeURIComponent(`${convertIfDate(value)}`)}`;
     })
     .join('&');
 };

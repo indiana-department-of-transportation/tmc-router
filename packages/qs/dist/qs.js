@@ -1,12 +1,4 @@
 "use strict";
-/**
- * qs.ts
- *
- * @description Parses query strings into and creates them from Javascript objects.
- *
- * @author Jared Smith
- * @license MIT
- */
 Object.defineProperty(exports, "__esModule", { value: true });
 /**
  * @description Attempts to parse the argument as JSON. On failure returns an empty object.
@@ -91,6 +83,14 @@ exports.parseQs = (qs) => {
     // Fallback
     return exports.fallback(qs);
 };
+const convertIfDate = (x) => {
+    if (x instanceof Date) {
+        return x.toISOString();
+    }
+    else {
+        return '' + x;
+    }
+};
 /**
  * @description Converts an object into a query string.
  *
@@ -113,10 +113,10 @@ exports.constructQs = (params) => {
         if (Array.isArray(value)) {
             return value
                 .filter(v2 => v2 !== '' && v2 !== undefined)
-                .map(v2 => `${k}=${encodeURIComponent(v2)}`)
+                .map(v2 => `${k}=${encodeURIComponent(convertIfDate(v2))}`)
                 .join('&');
         }
-        return `${k}=${encodeURIComponent(`${value}`)}`;
+        return `${k}=${encodeURIComponent(`${convertIfDate(value)}`)}`;
     })
         .join('&');
 };

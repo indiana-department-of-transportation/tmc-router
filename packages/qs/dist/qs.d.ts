@@ -6,9 +6,7 @@
  * @author Jared Smith
  * @license MIT
  */
-interface IPojo {
-    [key: string]: any;
-}
+import { IPojo } from '@jasmith79/ts-utils';
 /**
  * @description Parses a query string into an object. Keys with multiple entries are
  * condensed into an Array with the values in the order they appear in the query
@@ -36,4 +34,3 @@ export declare const parseQs: (qs: string) => IPojo;
  * @returns {string} The HTTP query string.
  */
 export declare const constructQs: (params: IPojo) => string;
-export {};
