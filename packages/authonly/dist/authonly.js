@@ -15,26 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const react_1 = __importDefault(require("react"));
 const prop_types_1 = __importDefault(require("prop-types"));
 const react_router_dom_1 = require("react-router-dom");
-/**
-  * @description The protected route component.
-  *
-  * @param {Object} [props] The destructured props object.
-  * @param {Any} props.location The location from the router.
-  * @returns {Redirect} The Login or Forbidden route.
-  */
-const NotAuthorized = ({ location, loggedIn, authorized }) => {
-    if (!loggedIn) {
-        console.log('returning login redirect');
-        return react_1.default.createElement(react_router_dom_1.Redirect, { to: { pathname: '/login', state: { from: location } } });
-    }
-    if (!authorized) {
-        return react_1.default.createElement(react_router_dom_1.Redirect, { to: { pathname: '/forbidden', state: { from: location } } });
-    }
-    throw Error('Invariant violated, NotAuthorized rendered by mistake.');
-};
-NotAuthorized.propTypes = {
-    location: prop_types_1.default.any,
-};
+const react_utils_1 = require("@jasmith79/react-utils");
 /**
  * @description The protected route component.
  *
@@ -44,19 +25,31 @@ NotAuthorized.propTypes = {
  * @param {Object} props.rest The remaining key/value pairs in props.
  * @returns {Route|Redirect} The desired Route if logged in, else the Login or Forbidden route.
  */
-exports.AuthOnlyRoute = ({ render, roles, user, ...rest }) => {
+exports.AuthOnlyRoute = ({ roles, user, path, render, children, component, }) => {
     const loggedIn = Boolean(user && user.token);
-    const authorized = Boolean(loggedIn && roles.some((role) => user.roles.includes(role)));
-    return (loggedIn && authorized)
-        ? (react_1.default.createElement(react_router_dom_1.Route, Object.assign({}, rest, { render: render })))
-        : (react_1.default.createElement(react_router_dom_1.Route, Object.assign({}, rest, { render: ({ location }) => react_1.default.createElement(NotAuthorized, { location: location, loggedIn: loggedIn, authorized: authorized }) })));
+    const location = react_router_dom_1.useLocation();
+    const renderTarget = react_utils_1.useRenderProps({ children, render, component });
+    const matchesRole = !(roles === null || roles === void 0 ? void 0 : roles.length) || roles.some((role) => user.roles.includes(role));
+    const authorized = Boolean(loggedIn && matchesRole);
+    if (loggedIn && authorized) {
+        const from = location.pathname + location.search;
+        const desiredPage = location.pathname === '/login' ? '/' : from;
+        return react_1.default.createElement(react_router_dom_1.Route, { render: renderTarget, path: desiredPage });
+    }
+    else {
+        return loggedIn
+            ? (react_1.default.createElement(react_router_dom_1.Route, { path: path },
+                react_1.default.createElement(react_router_dom_1.Redirect, { to: { pathname: '/forbidden', state: { from: location } } }))) : (react_1.default.createElement(react_router_dom_1.Route, { path: path },
+            react_1.default.createElement(react_router_dom_1.Redirect, { to: { pathname: '/login', state: { from: location } } })));
+    }
 };
 exports.AuthOnlyRoute.propTypes = {
-    roles: prop_types_1.default.arrayOf(prop_types_1.default.string.isRequired).isRequired,
-    render: prop_types_1.default.func.isRequired,
+    path: prop_types_1.default.string.isRequired,
+    roles: prop_types_1.default.arrayOf(prop_types_1.default.string),
+    render: prop_types_1.default.func,
     user: prop_types_1.default.shape({
         token: prop_types_1.default.string,
-        roles: prop_types_1.default.arrayOf(prop_types_1.default.string.isRequired).isRequired,
+        roles: prop_types_1.default.arrayOf(prop_types_1.default.string),
     }).isRequired,
 };
 exports.default = exports.AuthOnlyRoute;

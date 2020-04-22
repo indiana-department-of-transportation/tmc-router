@@ -8,56 +8,29 @@
  * @copyright INDOT, 2019
  */
 
-import React, { ReactNode, SFC } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Route,
   Redirect,
-  RouteComponentProps,
+  useLocation,
 } from 'react-router-dom';
 
-export interface AuthOnlyProps {
-  render: (props: RouteComponentProps<any>) => ReactNode | undefined,
-  roles: string[],
+import {
+  RenderProps,
+  useRenderProps,
+} from '@jasmith79/react-utils';
+
+export type AuthOnlyProps = {
   path: string,
-  exact: boolean,
+  roles?: string[],
+  exact?: boolean,
+  render?: () => React.ReactNode,
   user: {
-    token?: string | null,
+    token?: string,
     roles: string[],
   },
 }
-
-/**
-  * @description The protected route component.
-  *
-  * @param {Object} [props] The destructured props object.
-  * @param {Any} props.location The location from the router.
-  * @returns {Redirect} The Login or Forbidden route.
-  */
-const NotAuthorized = ({
-  location,
-  loggedIn,
-  authorized
-}: {
-  location: any,
-  loggedIn: boolean,
-  authorized: boolean,
-}) => {
-  if (!loggedIn) {
-    console.log('returning login redirect');
-    return <Redirect to={{ pathname: '/login', state: { from: location } }} />;
-  }
-
-  if (!authorized) {
-    return <Redirect to={{ pathname: '/forbidden', state: { from: location } }} />;
-  }
-
-  throw Error('Invariant violated, NotAuthorized rendered by mistake.');
-};
-
-NotAuthorized.propTypes = {
-  location: PropTypes.any,
-};
 
 /**
  * @description The protected route component.
@@ -68,36 +41,44 @@ NotAuthorized.propTypes = {
  * @param {Object} props.rest The remaining key/value pairs in props.
  * @returns {Route|Redirect} The desired Route if logged in, else the Login or Forbidden route.
  */
-export const AuthOnlyRoute: SFC<AuthOnlyProps> = ({
-  render,
+export const AuthOnlyRoute = ({
   roles,
   user,
-  ...rest
-}) => {
+  path,
+  render,
+  children,
+  component,
+}: AuthOnlyProps & RenderProps<{}>) => {
   const loggedIn = Boolean(user && user.token);
-  const authorized = Boolean(loggedIn && roles.some((role: string) => user.roles.includes(role)));
-
-  return (loggedIn && authorized)
-    ? (
-      <Route
-        {...rest}
-        render={render}
-      />
-    )
-    : (
-      <Route
-        {...rest}
-        render={({ location }) => <NotAuthorized location={location} loggedIn={loggedIn} authorized={authorized} />}
-      />
-    );
+  const location = useLocation();
+  const renderTarget = useRenderProps({ children, render, component });
+  const matchesRole = !roles?.length || roles.some((role: string) => user.roles.includes(role));
+  const authorized = Boolean(loggedIn && matchesRole);
+  if (loggedIn && authorized) {
+    const from = location.pathname + location.search;
+    const desiredPage = location.pathname === '/login' ? '/' : from;
+    return <Route render={renderTarget} path={desiredPage} />;
+  } else {
+    return loggedIn
+      ? (
+        <Route path={path}>
+          <Redirect to={{ pathname: '/forbidden', state: { from: location } }} />
+        </Route>
+      ) : (
+        <Route path={path}>
+          <Redirect to={{ pathname: '/login', state: { from: location } }} />
+        </Route>
+      );
+  }
 };
 
 AuthOnlyRoute.propTypes = {
-  roles: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
-  render: PropTypes.func.isRequired,
+  path: PropTypes.string.isRequired,
+  roles: PropTypes.arrayOf(PropTypes.string),
+  render: PropTypes.func,
   user: PropTypes.shape({
     token: PropTypes.string,
-    roles: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+    roles: PropTypes.arrayOf(PropTypes.string),
   }).isRequired,
 };
 

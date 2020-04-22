@@ -11,7 +11,7 @@ import React from 'react';
 
 import Adapter from 'enzyme-adapter-react-16';
 import Enzyme, { shallow, mount } from 'enzyme';
-import { Route, MemoryRouter as Router } from 'react-router-dom';
+import { Route, MemoryRouter as Router, Switch } from 'react-router-dom';
 
 import AuthOnlyRoute from './authonly';
 
@@ -19,10 +19,10 @@ Enzyme.configure({ adapter: new Adapter() });
 
 const defaultUser = {
   user_name: '',
-  user_id: null,
+  user_id: 0,
   roles: [],
-  token: null,
-  ts: null,
+  token: '',
+  ts: '',
 };
 
 describe('AuthOnlyRoute', () => {
@@ -34,7 +34,7 @@ describe('AuthOnlyRoute', () => {
           path="/"
           user={defaultUser}
           roles={['a']}
-          render={() => "Hello world"}
+          render={() => <div>"Hello world"</div>}
         />
       </Router>
     );
@@ -43,14 +43,16 @@ describe('AuthOnlyRoute', () => {
   it('should return a redirect if there is no user token', () => {
     const wrapper = mount(
       <Router>
-        <AuthOnlyRoute
-          exact
-          path="/"
-          user={defaultUser}
-          roles={['a']}
-          render={() => <div id="goodbye">Adios</div>}
-        />
-        <Route exact path="/login"><div id="hello">Hola</div></Route>
+        <Switch>
+          <Route exact path="/login"><div id="hello">Hola</div></Route>
+          <AuthOnlyRoute
+            exact
+            path="/"
+            user={defaultUser}
+            roles={['a']}
+            render={() => <div id="goodbye">Adios</div>}
+          />
+        </Switch>
       </Router>
     );
 
